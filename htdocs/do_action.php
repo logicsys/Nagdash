@@ -7,6 +7,44 @@ require_once '../phplib/utils.php';
 
 $supported_methods = ["ack", "downtime", "enable", "disable"];
 
+function nagdash_get_user() {
+  $username = '';
+  // Try to get the login name from the $_SERVER variable.
+  if (isset($_SERVER['HTTP_AUTHORIZATION']) || isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    $authorization_header = '';
+    if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION'])) {
+      $authorization_header = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    // If using CGI on Apache with mod_rewrite, the forwarded HTTP header appears in the redirected HTTP headers.
+    elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+      $authorization_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
+    // Resemble PHP_AUTH_USER and PHP_AUTH_PW for a Basic authentication from
+    // the HTTP_AUTHORIZATION header. See http://www.php.net/manual/features.http-auth.php
+    if (!empty($authorization_header)) {
+      list($username_temp, $userpass_temp) = explode(':', base64_decode(substr($authorization_header, 6)));
+      $username = $username_temp;
+    }
+  }
+  // Check other possible values in different keys of the $_SERVER superglobal
+  elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
+    $username = $_SERVER['REDIRECT_REMOTE_USER'];
+  }
+  elseif (isset($_SERVER['REMOTE_USER'])) {
+    $username = $_SERVER['REMOTE_USER'];
+  }
+  elseif (isset($_SERVER['REDIRECT_PHP_AUTH_USER'])) {
+    $username = $_SERVER['REDIRECT_PHP_AUTH_USER'];
+  }
+  elseif (isset($_SERVER['PHP_AUTH_USER'])) {
+    $username = $_SERVER['PHP_AUTH_USER'];
+  }
+echo $username;
+  return $username;
+}
+
+
+
 if (!isset($_POST['nag_host'])) {
     echo "Are you calling this manually? This should be called by Nagdash only.";
 } else {

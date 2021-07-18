@@ -14,7 +14,7 @@ if (!is_array($unwanted_hosts)) $unwanted_hosts = array();
 ?>
 <html>
 <head>
-<title>Nagios Dashboard</title>
+<title><?php echo $site_title; ?></title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -37,6 +37,12 @@ document.refresh_every_ms = <?php echo (isset($refresh_every_ms) ? $refresh_ever
 </head>
 <body>
   <div id="spinner"><h3><img src="images/ajax-loader.gif" align="absmiddle"> Refreshing...</h3></div>
+  <div id="nagioshostnavbox"><?php
+foreach($nagios_hosts as $cnaghost)
+{
+    echo "<a href=\"https://".$cnaghost["hostname"]."/nagios\">".$cnaghost["tag"]."</a> ";
+}
+?></div>
   <div id="nagioscontainer"></div>
   <?php NagdashHelpers::render("settings_dialog.php", ["nagios_hosts" => $nagios_hosts,
                                                        "unwanted_hosts" => $unwanted_hosts]);?>

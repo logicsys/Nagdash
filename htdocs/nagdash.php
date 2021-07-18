@@ -1,4 +1,6 @@
 <?php
+//die(1);
+
 error_reporting(E_ALL);
 require_once '../config.php';
 require_once '../phplib/utils.php';
@@ -157,7 +159,8 @@ if (count($known_hosts) > 0) {
                                                 "host" => $service['hostname'],
                                                 "service" => $service['service_name']]);
         echo "</span></td>";
-        echo "<td class='bold {$nagios_service_status_colour[$service['service_state']]} {$soft_style}'>{$blink_tag}<a href='{$service['weburl']}' target=\"_blank\">{$service['service_name']}</a><span class='detail'>{$service['detail']}</span></td>";
+    echo "<td class=\"bold {$nagios_service_status_colour[$service['service_state']]} {$soft_style}\"><a href=\"{$service['weburl']}\" target=\"_blank\">{$blink_tag}{$service['service_name']}</a><span class='detail'>{$service['detail']}</span></td>";
+//        echo "<td class=\"bold {$nagios_service_status_colour[$service['service_state']]} {$soft_style}\">{$blink_tag}<a href=\"$service['weburl']\" target=\"_blank\">$service['service_name']</a><span class='detail'>{$service['detail']}</span></td>";
         echo "<td>{$service['duration']}</td>";
         echo "<td>{$service['current_attempt']}/{$service['max_attempts']}</td>";
         echo "</tr>";
@@ -183,11 +186,12 @@ if (count($known_services) > 0) { ?>
         if ($service['is_ack']) $status_text = "ack";
         if ($service['is_downtime']) $status_text = "downtime {$service['downtime_remaining']}";
         if (!$service['is_enabled']) $status_text = "disabled";
-        echo "<tr class='known_service'>";
+        echo "<tr class='aaknown_service'>";
         $tag = NagdashHelpers::print_tag($service['tag'], count($nagios_hosts));
         echo "<td>{$service['hostname']} " . $tag . "</td>";
-        echo "<td><a href='{$service['weburl']}' target=\"_blank\">{$service['service_name']}</a></td>";
-        echo "<td class='{$nagios_service_status_colour[$service['service_state']]}'>{$nagios_service_status[$service['service_state']]} ({$status_text})</td>";
+        echo "<td><a href=\"{$service['weburl']}\" target=\"_blank\">{$service['service_name']}</a></td>";
+//        echo "<td>eee<a href='{$service['weburl']}' target=\"_blank\">{$service['service_name']}</a></td>";
+        echo "<td class=\"{$nagios_service_status_colour[$service['service_state']]}\">{$nagios_service_status[$service['service_state']]} ({$status_text})</td>";
         echo "<td>{$service['duration']}</td>";
         echo "<td>{$service['current_attempt']}/{$service['max_attempts']}</td>";
         echo "</tr>";
@@ -209,3 +213,4 @@ foreach ($curl_stats as $server => $server_stats) {
 }
 
 ?>
+
