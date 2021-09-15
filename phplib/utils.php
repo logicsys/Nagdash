@@ -185,6 +185,7 @@ class NagdashHelpers {
                 } else {
                     foreach ($host_state as $this_host => $null) {
                         $host_state[$this_host]['tag'] = $host['tag'];
+            $host_state[$this_host]['weburl'] = isset($host['weburl']) ? $host['weburl'] : null;
                     }
                     $state += (array) $host_state;
                 }
@@ -284,6 +285,7 @@ class NagdashHelpers {
                         if ($service_detail['last_state_change'] >= $state_change_backstop) {
                             array_push($$array_name, array(
                                 "hostname" => $hostname,
+                "weburl" => "{$host_detail['weburl']}/cgi-bin/extinfo.cgi?type=2&host={$hostname}&service={$service_name}",
                                 "service_name" => $service_name,
                                 "service_state" => $service_detail[$api_cols['state']],
                                 "duration" => timeago($service_detail['last_state_change']),
